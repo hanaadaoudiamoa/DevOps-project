@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing — Interactive Course</title>
+<meta name="description" content="An interactive, self-paced Cloud Computing course: foundations, deployment and service models, architecture, security, economics, storage, operations and cloud adoption planning.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<div id="app" class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav class="sidebar" id="sidebar" aria-label="Course navigation">
+    <div class="sidebar-header">
+      <a href="#/home" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 17.5a4.5 4.5 0 0 1-.4-8.98A5.5 5.5 0 0 1 17.4 7.07 4.75 4.75 0 0 1 17 17.5H7Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-title">Cloud Computing</span>
+          <span class="brand-subtitle">Interactive Course</span>
+        </span>
+      </a>
+      <button class="icon-btn sidebar-close" id="sidebar-close" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="sidebar-progress">
+      <div class="sidebar-progress-row">
+        <span>Your progress</span>
+        <span id="sidebar-progress-pct">0%</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-label="Course progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="sidebar-progress-bar">
+        <div class="progress-fill" id="sidebar-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="sidebar-progress-sub" id="sidebar-progress-sub">0 / 0 lessons completed</div>
+    </div>
+
+    <div class="sidebar-quicklinks">
+      <button class="quicklink" data-nav="#/home"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5M6 10v9h12v-9" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg><span>Home</span></button>
+      <button class="quicklink" data-nav="#/map"><svg viewBox="0 0 24 24" fill="none"><path d="M4 6l5-2 6 2 5-2v14l-5 2-6-2-5 2V6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 4v14M15 6v14" stroke="currentColor" stroke-width="1.6"/></svg><span>Course Map</span></button>
+      <button class="quicklink" data-nav="#/glossary"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h11a2 2 0 0 1 2 2v14l-2-1-2 1-2-1-2 1-2-1-2 1V6a2 2 0 0 1-2-2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 8h6M8 11h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Glossary</span></button>
+      <button class="quicklink" data-nav="#/bookmarks"><svg viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16l-6-4-6 4V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg><span>Bookmarks</span></button>
+      <button class="quicklink" data-nav="#/notes"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h14v16H5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>My Notes</span></button>
+    </div>
+
+    <div class="sidebar-section-label">Course</div>
+    <div class="sidebar-tree" id="sidebar-tree"><!-- built by JS --></div>
+
+    <div class="sidebar-footer">
+      <button class="reset-btn" id="reset-progress-btn" type="button">Reset progress</button>
+    </div>
+  </nav>
+
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <button class="icon-btn menu-btn" id="menu-btn" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb"></nav>
+
+    <div class="search-wrap">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.7"/><path d="m20 20-3.6-3.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <input type="search" id="search-input" placeholder="Search the course…" aria-label="Search the course" autocomplete="off">
+        <kbd class="search-kbd">/</kbd>
+      </div>
+      <div class="search-results" id="search-results" hidden></div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN CONTENT ============ -->
+  <main class="main-content" id="main-content" tabindex="-1"></main>
+
+  <!-- ============ CONTEXT PANEL (right) ============ -->
+  <aside class="context-panel" id="context-panel"></aside>
+
+</div>
+
+<!-- Term definition popover -->
+<div class="modal-backdrop" id="term-modal-backdrop" hidden>
+  <div class="term-modal" id="term-modal" role="dialog" aria-modal="true" aria-labelledby="term-modal-title">
+    <button class="icon-btn modal-close" id="term-modal-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <div id="term-modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="js/course-data.js"></script>
+<script src="js/markdown.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/notes.js"></script>
+<script src="js/bookmarks.js"></script>
+<script src="js/glossary.js"></script>
+<script src="js/quiz.js"></script>
+<script src="js/search.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/course.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
