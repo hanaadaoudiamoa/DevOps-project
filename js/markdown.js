@@ -81,6 +81,19 @@
 
       if (isHr(line)) { blocks.push({ type: "hr" }); i++; continue; }
 
+      if (line.trim().startsWith("```")) {
+        const lang = line.trim().slice(3).trim();
+        i++;
+        const clines = [];
+        while (i < lines.length && !lines[i].trim().startsWith("```")) {
+          clines.push(lines[i]);
+          i++;
+        }
+        if (i < lines.length) i++;
+        blocks.push({ type: "code", lang, code: clines.join("\n") });
+        continue;
+      }
+
       if (isHeading(line)) {
         const m = line.match(/^(#{1,6})\s+(.*)$/);
         blocks.push({ type: "heading", level: m[1].length, text: m[2].trim() });
@@ -211,6 +224,8 @@
         return "<ol>" + block.items.map((it) => `<li>${inline(it)}</li>`).join("") + "</ol>";
       case "table":
         return renderTable(block);
+      case "code":
+        return `<div class="code-block"><pre><code>${escapeHtml(block.code)}</code></pre><button class="code-copy-btn" type="button" aria-label="Copy code to clipboard">Copy</button></div>`;
       case "blockquote":
         return `<blockquote class="callout"><p>${inline(block.text)}</p></blockquote>`;
       case "hr":
