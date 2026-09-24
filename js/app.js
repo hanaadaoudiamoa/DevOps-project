@@ -236,6 +236,49 @@
     }, 450);
   }
 
+  // ---- Theme handling --------------------------------------------------------
+  function getPreferredTheme() {
+    const saved = localStorage.getItem("cc_theme");
+    if (saved === "dark" || saved === "light") return saved;
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("cc_theme", theme);
+    const themeBtn = document.getElementById("theme-toggle");
+    if (themeBtn) {
+      const isDark = theme === "dark";
+      themeBtn.setAttribute("title", isDark ? "Switch to light theme" : "Switch to dark theme");
+      themeBtn.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute("data-theme") || getPreferredTheme();
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    showToast(next === "dark" ? "Dark mode activated" : "Light mode activated");
+  }
+
+  function handleCopyCode(btn) {
+    const pre = btn.closest(".code-block") ? btn.closest(".code-block").querySelector("pre") : null;
+    if (!pre) return;
+    const text = pre.innerText || pre.textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => {
+        const old = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => { btn.textContent = old; }, 1800);
+        showToast("Code copied to clipboard");
+      }).catch(() => {
+        showToast("Failed to copy code");
+      });
+    } else {
+      showToast("Clipboard not accessible");
+    }
+  }
+
   // ---- delegated click handling ---------------------------------------------------
   document.addEventListener("click", function (e) {
     const t = e.target;
@@ -316,6 +359,9 @@
     if (t.closest("#term-modal-close")) { closeTermModal(); return; }
     if (t.id === "term-modal-backdrop") { closeTermModal(); return; }
 
+    if (t.closest("#theme-toggle")) { toggleTheme(); return; }
+    if (t.closest(".code-copy-btn")) { handleCopyCode(t.closest(".code-copy-btn")); return; }
+
     if (t.closest("#reset-progress-btn")) { handleResetProgress(); return; }
 
     if (!t.closest(".search-wrap")) closeSearchResults();
@@ -352,6 +398,7 @@
 
   // ---- init -------------------------------------------------------------------------
   function init() {
+    applyTheme(getPreferredTheme());
     if (!location.hash || location.hash === "#") location.hash = "#/home";
     window.addEventListener("hashchange", renderRoute);
     Progress.onChange(() => { Course.refreshSidebar(currentRefId); });
